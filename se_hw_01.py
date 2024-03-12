@@ -1,6 +1,6 @@
 from datetime import datetime
 
-input_data = [
+users = [
     {'name': 'John Nowak', 'birthday': datetime(1995, 10, 28)},
     {'name': 'Alice Smith', 'birthday': datetime(1987, 3, 13)},
     {'name': 'David Johnson', 'birthday': datetime(1990, 3, 8)},
@@ -8,7 +8,7 @@ input_data = [
     {'name': 'Michael Brown', 'birthday': datetime(1985, 9, 4)},
     {'name': 'Olivia Wilson', 'birthday': datetime(1992, 12, 20)},
     {'name': 'James Taylor', 'birthday': datetime(1996, 2, 2)},
-    {'name': 'Sophia Anderson', 'birthday': datetime(1989, 6, 10)},
+    {'name': 'Sophia Anderson', 'birthday': datetime(1989, 3, 16)},
     {'name': 'Daniel Martinez', 'birthday': datetime(1993, 11, 14)},
     {'name': 'Isabella Thomas', 'birthday': datetime(1997, 3, 15)},
     {'name': 'Joseph Lee', 'birthday': datetime(1991, 8, 18)},
@@ -43,7 +43,8 @@ else:
 
 
 def get_birthdays_per_week(users):
-    result = {}
+    result = {} #{'Poniedziałek': ['Bill Gates'], 'Czwartek': ['Jan Koum']}
+
     today = datetime.today().date()
     
     for user in users:
@@ -58,16 +59,34 @@ def get_birthdays_per_week(users):
             delta_days = (birthday_this_year - today).days
             if delta_days < 7:
                 weekday = weekdays[birthday_this_year.weekday()]
+
+                # if sunday or saterday move to monday
+                if (birthday_this_year.weekday() == 5) or (birthday_this_year.weekday() == 6):
+                    weekday = weekdays[0] # Monday
+                
+                
                 if weekday in result:
-                    result[weekday] += (', ' + name)
+                    # If the value is not already a list, convert it to a list
+                    if not isinstance(result[weekday], list):
+                        result[weekday] = [result[weekday]]
+                    # Append the new value
+                    result[weekday].append(name)
                 else:
-                    result[weekday] = name
+                    # If the key does not exist, create it with the new value
+                    result[weekday] = [name]
 
-    for k, v in result.items():
-        print(k, v)
+    #sort the result by weekdays
+    sorted_result = dict(sorted(result.items(), key=lambda item: weekdays.index(item[0])))
+    
+    #print the sorted result
+    print('Birthdays in the next 7 days:')
+    for k, v in sorted_result.items():
+        print(f'{k}: ', end='')
+        for name in v:
+            print(f'{name}, ', end='')
+        print()
 
-
-get_birthdays_per_week(input_data)
+get_birthdays_per_week(users)
 
 
     
