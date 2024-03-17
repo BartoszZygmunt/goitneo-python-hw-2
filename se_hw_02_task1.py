@@ -1,3 +1,16 @@
+# error handling
+def input_error(func):
+    def inner(args, kwargs):
+        try:
+            return func(args, kwargs)
+        except ValueError:
+            return "Invalid command. Usage: [name] [phone number]"
+        except KeyError:
+            return "Sorry, Contact not found."
+        except IndexError:
+            return "Invalid command. Usage: command [arguments]"
+    return inner
+
 #parse input
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -5,9 +18,8 @@ def parse_input(user_input):
     return cmd, args
 
 #change contact, which is already in the contacts
+@input_error
 def change_contact(args, contacts):
-    if len(args) != 2:
-        return "Invalid command. Usage: change [name] [new phone number]"
     name, phone = args
     if name in contacts:
         contacts[name] = phone
@@ -16,9 +28,8 @@ def change_contact(args, contacts):
         return "Contact not found."
 
 #show phone number of the contact
+@input_error
 def show_phone(args, contacts):
-    if len(args) != 1:
-        return "Invalid command. Usage: phone [name]"
     name = args[0]
     if name in contacts:
         return contacts[name]
@@ -26,9 +37,8 @@ def show_phone(args, contacts):
         return "Contact not found."
 
 #add new contact
+@input_error
 def add_contact(args, contacts):
-    if len(args) != 2:
-        return "Invalid command. Usage: add [name] [phone number]"
     name, phone = args
     contacts[name] = phone
     return "Contact added."
