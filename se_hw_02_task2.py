@@ -19,10 +19,12 @@ class Phone(Field):
         if self.validate_phone(value):
             self.value = value
         else:
-            print("Phone must be 10 digits")
+            print("Phone must have 10 digits")
     
     def validate_phone(self, phone):
         return len(str(phone)) == 10
+
+
 
 class Record:
     def __init__(self, name):
@@ -47,10 +49,9 @@ class Record:
         for phone in self.phones:
             if phone.value == phone_number:
                 self.phones.remove(phone)
-
-
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+
 
 class AddressBook(UserDict):
     def add_record(self, record):
@@ -61,13 +62,17 @@ class AddressBook(UserDict):
     
     def delete(self, name):
         del self.data[name]
+
+
  
 book = AddressBook()
 
 john_record = Record("John")
 john_record.add_phone("1234567890")
+
 john_record.add_phone("5555555555")
 book.add_record(john_record)
+
 jane_record = Record("Jane")
 jane_record.add_phone("9876543210")
 book.add_record(jane_record)
@@ -81,3 +86,4 @@ print(john)
 found_phone = john.find_phone("5555555555")
 print(f"{john.name}: {found_phone}")  
 book.delete("Jane")
+
